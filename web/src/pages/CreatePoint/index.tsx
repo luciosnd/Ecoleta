@@ -9,7 +9,7 @@ import { LeafletMouseEvent } from 'leaflet';
 import Modal from 'react-modal';
 import './styles.css'
 
-//para estados de array ou object: informat o tipo da variavel
+//para estados de array ou object: informar o tipo da variavel
 interface Item {
   id: number;
   title: string;

@@ -50,7 +50,7 @@ class PointController{
   async show(request: Request, response: Response){
     const point_id = request.params.id;
 
-    const point = await knex('point').select().where({id: point_id});
+    const point = await knex('point').select().where({id: point_id}).first();
 
     if(!point){
       return response.status(400).json({message: 'Point not found.'});
@@ -58,7 +58,7 @@ class PointController{
 
     const items = await knex('item')
       .join('point_item', 'item.id', '=', 'item_id')
-      .select('item.id', 'title')
+      .select('title')
       .where({point_id: point_id});
 
     return response.json({point, items});
