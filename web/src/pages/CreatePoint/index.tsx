@@ -7,6 +7,7 @@ import api from '../../services/api';
 import ibge from '../../services/ibge';
 import { LeafletMouseEvent } from 'leaflet';
 import Modal from 'react-modal';
+import Dropzone from '../../components/Dropzone';
 import './styles.css'
 
 //para estados de array ou object: informar o tipo da variavel
@@ -40,6 +41,7 @@ const CreatePoint = () => {
   const [selectedCity, setSelectedCity] = useState('0');
   const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0]);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [selectedFile, setSelectedFile] = useState<File>();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -105,16 +107,19 @@ const CreatePoint = () => {
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    const data = {
-      ...formData,
-      image: "hmkkbjs.img" ,
-      latitude: selectedPosition[0],
-      longitude: selectedPosition[1],
-      city: selectedCity,
-      uf: selectedUf, 
-      items: selectedItems
-    }
-
+    const data = new FormData();
+    
+    data.append('name', formData.name);
+    data.append('email', formData.email);
+    data.append('whatsapp', formData.whatsapp);
+    data.append('image', "hmkkbjs.img");
+    data.append('latitude', String(selectedPosition[0]));
+    data.append('longitude', String(selectedPosition[1]));
+    data.append('city', selectedCity);
+    data.append('uf', selectedUf);
+    data.append('items', selectedItems.join(','));
+    if(selectedFile) data.append('image', selectedFile);
+    
     await api.post('points', data);
 
     toggleModal();
@@ -136,6 +141,8 @@ const CreatePoint = () => {
       <form onSubmit={handleSubmit}>
         <h1>Cadastro do <br/> ponto de coleta</h1>
         
+        <Dropzone onFileUpload={setSelectedFile}/>
+
         <fieldset>
           <legend>
             <h2>Dados</h2>

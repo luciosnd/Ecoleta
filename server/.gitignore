@@ -1,2 +1,4 @@
 /node_modules
-/public/static/**/*.sqlite
+uploads/*
+!uploads/.gitkeep
+*.sqlite
